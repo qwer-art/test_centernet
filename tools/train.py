@@ -275,8 +275,7 @@ def eval_one_epochs(model, val_loader, epoch, dev, writer):
 
     return np.mean(total_loss)
 
-
-if __name__ == '__main__':
+def train():
     remove_dir_and_create_dir(os.path.join(args.logs_dir, "weights"), is_remove=True)
     remove_dir_and_create_dir(os.path.join(args.logs_dir, "summary"), is_remove=True)
 
@@ -332,3 +331,14 @@ if __name__ == '__main__':
             torch.save(model,
                        '{}/weights/epoch={}_loss={:.4f}_val_loss={:.4f}.pt'.
                        format(args.logs_dir, epoch, train_loss, val_loss))
+
+def test():
+    # 将参数对象转换为字典
+    args_dict = vars(args)
+
+    # 打印每个参数的 k:v 形式
+    for key, value in args_dict.items():
+        print(f"{key}: {value}")
+
+if __name__ == '__main__':
+    test()
