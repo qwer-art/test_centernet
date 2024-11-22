@@ -11,6 +11,10 @@ import os
 import torch
 import sys
 sys.path.append(os.getcwd())
+import os.path as osp
+project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
+sys.path.append(project_path)
+from utils.util import *
 
 from core.helper import seed_torch, get_class_names
 
@@ -47,22 +51,22 @@ parser.add_argument('--pretrain_weight_path', type=str,
                     help='The path of the pretrain weight.')
 
 parser.add_argument('--dataset_train_path', type=str,
-                    default="",
+                    default=f"{train_file}",
                     help='The file path of the train data.')
 parser.add_argument('--dataset_val_path', type=str,
-                    default="",
+                    default=f"{val_file}",
                     help='The file path of the val data.')
 parser.add_argument('--image_train_dir', type=str,
-                    default="",
+                    default=f"{dataset_image_path}",
                     help='The images directory of the train data.')
 parser.add_argument('--image_val_dir', type=str,
-                    default="",
+                    default=f"{dataset_image_path}",
                     help='The images directory of the val data.')
 parser.add_argument('--annotation_train_dir', type=str,
-                    default="",
+                    default=f"{voc_ann_path}",
                     help='The labels directory of the train data.')
 parser.add_argument('--annotation_val_dir', type=str,
-                    default="",
+                    default=f"{voc_ann_path}",
                     help='The labels directory of the val data.')
 parser.add_argument('--dataset_format', type=str,
                     default="voc", choices=["coco", "voc", "yolo", "ilsvrc"],

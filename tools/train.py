@@ -283,7 +283,6 @@ def train():
     train_dataset, val_dataset = get_dataset(args, class_names)
 
     writer = SummaryWriter(os.path.join(args.logs_dir, "summary"))
-    step = 0
 
     freeze_step = len(train_dataset) // args.freeze_batch_size
     unfreeze_step = len(train_dataset) // args.unfreeze_batch_size
@@ -341,4 +340,6 @@ def test():
         print(f"{key}: {value}")
 
 if __name__ == '__main__':
-    test()
+    # test()
+    step = 0
+    train()
