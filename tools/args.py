@@ -43,7 +43,7 @@ parser.add_argument('--backbone', type=str,
                     choices=["resnet50", "resnet101"],
                     help='The path of the pretrain weight.')
 parser.add_argument('--pretrain_weight_path', type=str,
-                    default=None,
+                    default="/home/zyt/.cache/torch/hub/checkpoints/resnet50-0676ba61.pth",
                     help='The path of the pretrain weight.')
 
 parser.add_argument('--dataset_train_path', type=str,
