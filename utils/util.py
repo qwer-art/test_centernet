@@ -60,10 +60,10 @@ def split_files(src_folder,dest_folder1,dest_folder2,limit):
         dest_file = os.path.join(dest_folder2, file_name)
         shutil.copy(src_file, dest_file)
 
-if __name__ == '__main__':
-    xml_files = get_annpathes(voc_ann_path)
-    image_files = get_images(dataset_image_path)
-    print(f"images: {len(image_files)},xml_files: {len(xml_files)}")
-    limit = 10000
-    # split_files(dataset_image_path,train_image_path,val_image_path,limit)
-    split_files(voc_ann_path,train_ann_path,val_ann_path,limit)
+# if __name__ == '__main__':
+#     xml_files = get_annpathes(voc_ann_path)
+#     image_files = get_images(dataset_image_path)
+#     print(f"images: {len(image_files)},xml_files: {len(xml_files)}")
+#     limit = 10000
+#     # split_files(dataset_image_path,train_image_path,val_image_path,limit)
+#     split_files(voc_ann_path,train_ann_path,val_ann_path,limit)
