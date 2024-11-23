@@ -130,8 +130,8 @@ class CenterNetDataset(Dataset):
     def data_augmentation(self, image, bboxes):
         if random.random() < 0.5:
             image, bboxes = self.random_horizontal_flip(image, bboxes)
-        # if random.random() < 0.5:
-        #     image, bboxes = self.random_vertical_flip(image, bboxes)
+        if random.random() < 0.5:
+            image, bboxes = self.random_vertical_flip(image, bboxes)
         if random.random() < 0.5:
             image, bboxes = self.random_crop(image, bboxes)
         if random.random() < 0.5:

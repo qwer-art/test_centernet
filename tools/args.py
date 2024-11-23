@@ -33,8 +33,8 @@ parser.add_argument('--warmup_epochs', type=int, default=5, help='The number of 
 parser.add_argument('--freeze_epochs', type=int, default=50, help='The number of freeze training epochs.')
 parser.add_argument('--unfreeze_epochs', type=int, default=100, help='The number of unfreeze training epochs.')
 
-parser.add_argument('--freeze_batch_size', type=int, default=16, help='The number of examples per batch.')
-parser.add_argument('--unfreeze_batch_size', type=int, default=16, help='The number of examples per batch.')
+parser.add_argument('--freeze_batch_size', type=int, default=4, help='The number of examples per batch.')
+parser.add_argument('--unfreeze_batch_size', type=int, default=4, help='The number of examples per batch.')
 
 parser.add_argument('--learn_rate_init', type=float, default=2e-4,
                     help='Initial value of cosine annealing learning rate.')

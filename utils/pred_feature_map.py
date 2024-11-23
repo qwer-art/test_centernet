@@ -14,18 +14,41 @@ from util import *
 from tools.train import CosineAnnealingWarmupRestarts
 from tools.args import args, dev, class_names
 
+def transform_image_bboxes():
+    train_dataset, val_dataset = get_dataset(args, class_names)
+    print(f"train_dataset: {len(train_dataset)},val_dataset: {len(val_dataset)}")
+    img_idx = 100
+
+    #### geometric transformation
+    image, bboxes = train_dataset.parse_annotation(img_idx)
+    print(f"[ RawImage ],img_idx:{img_idx},image: {image.shape},bboxes: {bboxes.shape}")
+    print(bboxes)
+    image,bboxes = train_dataset.random_horizontal_flip(image,bboxes)
+    print(f"[ HorizonFlip ],image: {image.shape},bboxes: {bboxes.shape}")
+    print(bboxes)
+    image,bboxes = train_dataset.random_vertical_flip(image,bboxes)
+    print(f"[ VerticalFlip ],image: {image.shape},bboxes: {bboxes.shape}")
+    print(bboxes)
+    image,bboxes = train_dataset.random_crop(image,bboxes)
+    print(f"[ RandomCrop ],image: {image.shape},bboxes: {bboxes.shape}")
+    print(bboxes)
+    image,bboxes = train_dataset.random_translate(image,bboxes)
+    print(f"[ RandomTranslate ],image: {image.shape},bboxes: {bboxes.shape}")
+    print(bboxes)
+
+
 def test_train():
     remove_dir_and_create_dir(os.path.join(args.logs_dir, "weights"), is_remove=True)
     remove_dir_and_create_dir(os.path.join(args.logs_dir, "summary"), is_remove=True)
 
     model = get_model(args, dev)
     train_dataset, val_dataset = get_dataset(args, class_names)
-
+    print(f"train_dataset: {len(train_dataset)},val_dataset: {len(val_dataset)}")
     writer = SummaryWriter(os.path.join(args.logs_dir, "summary"))
 
     freeze_step = len(train_dataset) // args.freeze_batch_size
     unfreeze_step = len(train_dataset) // args.unfreeze_batch_size
-    print(f"freezee_step: {freeze_step},unfreeze_step: {unfreeze_step}")
+    print(f"freeze_batch_size: {args.freeze_batch_size},freezee_step: {freeze_step}")
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = optim.AdamW(params, args.learn_rate_init)
     scheduler = CosineAnnealingWarmupRestarts(optimizer,
@@ -33,8 +56,17 @@ def test_train():
                                               max_lr=args.learn_rate_init,
                                               min_lr=args.learn_rate_end,
                                               warmup_steps=args.warmup_epochs * freeze_step)
+    train_loader = DataLoader(train_dataset, shuffle=True, batch_size=args.freeze_batch_size,
+                              num_workers=args.num_workers, pin_memory=True)
+
+    ### predict
+    model.train()
+
+    image_size = len(train_loader)
+    print(f"image_size: {image_size}")
+
 
 
 if __name__ == '__main__':
-    step = 0
-    test_train()
+    # test_train()
+    transform_image_bboxes()
