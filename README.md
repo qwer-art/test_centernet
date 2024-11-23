@@ -98,6 +98,8 @@ Appreciate the work from the following repositories:
 - [katsura-jp](https://github.com/katsura-jp)/[pytorch-cosine-annealing-with-warmup](https://github.com/katsura-jp/pytorch-cosine-annealing-with-warmup)
 
 - [YunYang1994](https://github.com/YunYang1994)/[tensorflow-yolov3](https://github.com/YunYang1994/tensorflow-yolov3)
+- https://blog.csdn.net/weixin_42392454/article/details/125420887
+- https://github.com/Runist/torch_CenterNet
 
 ## License
 
