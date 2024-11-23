@@ -195,7 +195,7 @@ def test_data_set():
         if len(cls_set) > 3 and len(cls_set) < len(bboxes):
             print(f"img_idx: {img_idx}")
 
-def draw_labeles():
+def draw_heatmap():
     train_dataset, val_dataset = get_dataset(args, class_names)
     img_idx = 90
     image, bboxes = train_dataset.parse_annotation(img_idx)
@@ -231,6 +231,60 @@ def draw_labeles():
     plt.show()
     # endregion
     # region batch_wh
+
+def draw_wh_offset():
+    train_dataset, val_dataset = get_dataset(args, class_names)
+    img_idx = 90
+    image, bboxes = train_dataset.parse_annotation(img_idx)
+
+    clses = list(set([bbox[4] for bbox in bboxes]))
+    print(f"clses: {len(clses)},{clses}")
+    batch_hm,bbox_center_wh,batch_offset = train_dataset.debug_sparse_infos(img_idx)
+    print(f"image: {image.shape}")
+    print(f"batch_hm: {batch_hm.shape}")
+    print(f"image_center_wh: {len(bbox_center_wh)},image_center_offset: {batch_offset.shape}")
+
+    height, width, channels = batch_hm.shape
+    image_wh = np.zeros((height, width, 3))  # 生成一个全黑的 RGB 图像
+    image_offset = np.zeros((height, width, 3))  # 生成一个全黑的 RGB 图像
+
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+    axes[0].imshow(image_wh)
+    axes[0].set_title("image_wh")  # 给第一个子图添加标题
+    axes[0].axis('off')  # 隐藏坐标轴
+    for center_wh in bbox_center_wh:
+        cw,ch,w,h = center_wh
+        center = (cw,ch)
+        left = (cw - w / 2.,ch)
+        right = (cw + w / 2.,ch)
+        up = (cw,ch - h / 2.)
+        down = (cw,ch + h / 2.)
+
+        axes[0].annotate('', xy=left, xytext=center,
+                      arrowprops=dict(facecolor='red', edgecolor='red', arrowstyle="->", lw=2))
+        axes[0].annotate('', xy=right, xytext=center,
+                      arrowprops=dict(facecolor='red', edgecolor='red', arrowstyle="->", lw=2))
+        axes[0].annotate('', xy=up, xytext=center,
+                      arrowprops=dict(facecolor='red', edgecolor='red', arrowstyle="->", lw=2))
+        axes[0].annotate('', xy=down, xytext=center,
+                      arrowprops=dict(facecolor='red', edgecolor='red', arrowstyle="->", lw=2))
+
+    axes[1].imshow(image_offset)
+    axes[1].set_title("image_offset_w")  # 给第一个子图添加标题
+    axes[1].axis('off')  # 隐藏坐标轴
+    axes[1].imshow(batch_offset[...,0])
+
+    axes[2].imshow(image_offset)
+    axes[2].set_title("image_offset_h")  # 给第一个子图添加标题
+    axes[2].axis('off')  # 隐藏坐标轴
+    axes[2].imshow(batch_offset[...,1])
+
+    # 显示图像
+    plt.tight_layout()  # 自动调整子图间距
+    img_name = train_dataset.get_image_id(img_idx) +"_wh_offset"
+    plt.savefig(osp.join(test_save_path,img_name + ".jpg"))
+    plt.show()
 
 def test():
     np.random.seed(42)  # 设置随机种子，确保每次运行结果一致
@@ -279,5 +333,6 @@ if __name__ == '__main__':
     # ann_to_label()
     # draw_bboxes()
     # test_data_set()
-    draw_labeles()
+    # draw_heatmap()
     # test()
+    draw_wh_offset()
