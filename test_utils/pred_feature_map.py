@@ -13,11 +13,13 @@ from core.helper import get_model,remove_dir_and_create_dir,get_dataset
 from util import *
 from tools.train import CosineAnnealingWarmupRestarts
 from tools.args import args, dev, class_names
+from core.dataset.utils import image_resize, preprocess_input, gaussian_radius, draw_gaussian
 
 def transform_image_bboxes():
     train_dataset, val_dataset = get_dataset(args, class_names)
     print(f"train_dataset: {len(train_dataset)},val_dataset: {len(val_dataset)}")
     img_idx = 100
+    input_shape = (args.input_height, args.input_width)
 
     #### geometric transformation
     image, bboxes = train_dataset.parse_annotation(img_idx)
@@ -35,6 +37,8 @@ def transform_image_bboxes():
     image,bboxes = train_dataset.random_translate(image,bboxes)
     print(f"[ RandomTranslate ],image: {image.shape},bboxes: {bboxes.shape}")
     print(bboxes)
+    image,bboxes = image_resize(image,input_shape,bboxes)
+    print(f"[ Resize ],image: {image.shape},bboxes: {bboxes.shape}")
 
 
 def test_train():
