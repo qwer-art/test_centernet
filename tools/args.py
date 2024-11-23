@@ -23,7 +23,7 @@ warnings.filterwarnings("ignore")
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--gpu', type=str, default='1', help='Select gpu device.')
+parser.add_argument('--gpu', type=str, default='0', help='Select gpu device.')
 
 parser.add_argument('--input_height', type=int, default=416, help='The height of model input.')
 parser.add_argument('--input_width', type=int, default=416, help='The width of model input.')
@@ -84,8 +84,9 @@ parser.add_argument('--test_weight', type=str, help='The name of the model weigh
 
 args = parser.parse_args()
 
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
+# os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 seed_torch(777)
 
-dev = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# dev = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+dev = torch.device('cpu')
 class_names = get_class_names(args.classes_info_file)

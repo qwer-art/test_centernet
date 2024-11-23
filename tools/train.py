@@ -4,7 +4,7 @@
 # @Time : 2022/3/28 17:51
 # @Software: PyCharm
 # @Brief: train script
-from args import args, dev, class_names
+from tools.args import args, dev, class_names
 
 from core.loss import focal_loss, l1_loss
 from core.helper import remove_dir_and_create_dir, get_model, get_dataset, draw_bbox
