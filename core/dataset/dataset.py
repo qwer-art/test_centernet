@@ -52,8 +52,8 @@ class CenterNetDataset(Dataset):
         # Read image and bounding boxes
         image, bboxes = self.parse_annotation(index)
 
-        if self.is_train:
-            image, bboxes = self.data_augmentation(image, bboxes)
+        # if self.is_train:
+        #     image, bboxes = self.data_augmentation(image, bboxes)
 
         # Image preprocess
         image, bboxes = image_resize(image, self.input_shape, bboxes)

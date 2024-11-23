@@ -209,6 +209,7 @@ def draw_labeles():
     print(f"batch_offset: {batch_offset.shape}")
     print(f"batch_offset_mask: {batch_offset_mask.shape}")
 
+    # region heatmap
     hm_list = [batch_hm[...,cls] for cls in clses]
 
     # 创建一个 3x3 的子图布局 (最多 9 个子图)
@@ -228,11 +229,55 @@ def draw_labeles():
     img_name = train_dataset.get_image_id(img_idx) +"_heatmap"
     plt.savefig(osp.join(test_save_path,img_name + ".jpg"))
     plt.show()
+    # endregion
+    # region batch_wh
+
+def test():
+    np.random.seed(42)  # 设置随机种子，确保每次运行结果一致
+
+    # 创建一个100x100的图像，随机生成每个像素的宽高 (w, h)
+    image_wh = np.random.randint(1, 10, size=(100, 100, 2))  # 每个像素的宽高范围在 1 到 10 之间
+
+    # 创建一个绘图窗口
+    fig, ax = plt.subplots(figsize=(10, 10))
+
+    # 设置网格（背景图）
+    ax.set_xticks(np.arange(0, 101, 1))
+    ax.set_yticks(np.arange(0, 101, 1))
+    ax.grid(which='both')
+
+    # 绘制每个格子的箭头
+    for i in range(100):
+        for j in range(100):
+            w, h = image_wh[i, j]
+
+            if w > 0 and h > 0:
+                # 计算中心点
+                x_center, y_center = j + 0.5, i + 0.5  # 每个像素的中心
+                # 绘制左右箭头，长度为 w/2，方向为水平方向
+                ax.arrow(x_center, y_center, w / 2, 0, head_width=0.5, head_length=1, fc='r', ec='r')
+                ax.arrow(x_center, y_center, -w / 2, 0, head_width=0.5, head_length=1, fc='r', ec='r')
+                # 绘制上下箭头，长度为 h/2，方向为垂直方向
+                ax.arrow(x_center, y_center, 0, h / 2, head_width=0.5, head_length=1, fc='b', ec='b')
+                ax.arrow(x_center, y_center, 0, -h / 2, head_width=0.5, head_length=1, fc='b', ec='b')
+
+    # 设置坐标轴范围与图像大小
+    ax.set_xlim(0, 100)
+    ax.set_ylim(100, 0)  # y轴是倒的，和图像坐标一致
+    ax.set_aspect('equal')
+
+    # 隐藏坐标轴
+    ax.axis('off')
+
+    # 显示图像
+    plt.title('Visualization of Object Width and Height (w, h) with Arrows')
+    plt.show()
 
 if __name__ == '__main__':
     # test_train()
     # transform_image_bboxes()
     # ann_to_label()
-    draw_bboxes()
+    # draw_bboxes()
     # test_data_set()
-    # draw_labeles()
+    draw_labeles()
+    # test()
