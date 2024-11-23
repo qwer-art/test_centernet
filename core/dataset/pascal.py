@@ -35,6 +35,10 @@ class PascalDataset(CenterNetDataset):
             annotations = [line.strip().split()[0] for line in txt]
         return annotations
 
+    def get_image_id(self,index):
+        img_id = self.annotations[index]
+        return img_id
+
     def parse_annotation(self, index):
         """
         Parse self.annotation element and read image and bounding boxes.
@@ -45,7 +49,7 @@ class PascalDataset(CenterNetDataset):
         Returns: image, bboxes
 
         """
-        img_id = self.annotations[index]
+        img_id = self.get_image_id(index)
 
         image_path = os.path.join(self.image_dir, img_id + ".jpg")
         xml = ET.parse(os.path.join(self.annotation_dir, img_id + ".xml")).getroot()

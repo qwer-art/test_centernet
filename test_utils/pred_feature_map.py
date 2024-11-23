@@ -22,6 +22,8 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+test_save_path = osp.join(project_path,"test_save_data","image")
+
 def transform_image_bboxes():
     train_dataset, val_dataset = get_dataset(args, class_names)
     print(f"train_dataset: {len(train_dataset)},val_dataset: {len(val_dataset)}")
@@ -153,7 +155,7 @@ def test_train():
 def draw_bboxes():
     train_dataset, val_dataset = get_dataset(args, class_names)
     print(f"train_dataset: {len(train_dataset)},val_dataset: {len(val_dataset)}")
-    img_idx = 100
+    img_idx = 90
     input_shape = (args.input_height, args.input_width)
 
     #### geometric transformation
@@ -173,7 +175,58 @@ def draw_bboxes():
         ax.add_patch(rect)
         # 画标签
         ax.text(x,y,class_names[cls_id],color = "black",fontsize = 14,weight='bold',bbox=dict(facecolor='red', alpha=0.5, edgecolor='none', boxstyle='round,pad=0.3'))
+    img_name = train_dataset.get_image_id(img_idx)
+    plt.savefig(osp.join(test_save_path,img_name + ".jpg"))
+    plt.show()
 
+
+def test_data_set():
+    # img_idx: 90
+    # img_idx: 328
+    # img_idx: 685
+    # img_idx: 854
+    train_dataset, val_dataset = get_dataset(args, class_names)
+    train_length = len(train_dataset)
+    print(f"train_length: {train_length}")
+    for img_idx in range(train_length):
+        image,bboxes = train_dataset.parse_annotation(img_idx)
+        cls_list = [bbox[4] for bbox in bboxes]
+        cls_set = set(cls_list)
+        if len(cls_set) > 3 and len(cls_set) < len(bboxes):
+            print(f"img_idx: {img_idx}")
+
+def draw_labeles():
+    train_dataset, val_dataset = get_dataset(args, class_names)
+    img_idx = 90
+    image, bboxes = train_dataset.parse_annotation(img_idx)
+
+    clses = list(set([bbox[4] for bbox in bboxes]))
+    print(f"clses: {len(clses)},{clses}")
+    image, batch_hm, batch_wh, batch_offset, batch_offset_mask = train_dataset[img_idx]
+    print(f"image: {image.shape}")
+    print(f"batch_hm: {batch_hm.shape}")
+    print(f"batch_wh: {batch_wh.shape}")
+    print(f"batch_offset: {batch_offset.shape}")
+    print(f"batch_offset_mask: {batch_offset_mask.shape}")
+
+    hm_list = [batch_hm[...,cls] for cls in clses]
+
+    # 创建一个 3x3 的子图布局 (最多 9 个子图)
+    fig, axes = plt.subplots(3, 3, figsize=(9, 9))
+    axes = axes.flatten()
+
+    for i,(cls,hm_image) in enumerate(zip(clses,hm_list)):
+        axes[i].imshow(hm_image,cmap = 'gray',vmin = 0,vmax=1)
+        axes[i].axis('off')
+        axes[i].set_title(f"{class_names[cls]}", fontsize=10)
+
+    # 关闭没有图像的子图
+    for i in range(len(hm_list), len(axes)):
+        axes[i].axis('off')
+
+    plt.tight_layout()
+    img_name = train_dataset.get_image_id(img_idx) +"_heatmap"
+    plt.savefig(osp.join(test_save_path,img_name + ".jpg"))
     plt.show()
 
 if __name__ == '__main__':
@@ -181,3 +234,5 @@ if __name__ == '__main__':
     # transform_image_bboxes()
     # ann_to_label()
     draw_bboxes()
+    # test_data_set()
+    # draw_labeles()
