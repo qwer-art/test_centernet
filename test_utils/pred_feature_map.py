@@ -2,17 +2,13 @@ import sys
 import os.path as osp
 
 import numpy as np
-import torch
 from torch.utils.data import DataLoader
 import torch.optim as optim
 from tensorboardX import SummaryWriter
 
-from core.dataset import recover_input
-
 project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 sys.path.append(project_path)
 
-from net.centernet import CenterNet
 from core.helper import get_model,remove_dir_and_create_dir,get_dataset
 from util import *
 from tools.train import CosineAnnealingWarmupRestarts

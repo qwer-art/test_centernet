@@ -103,6 +103,12 @@ class CenterNet(nn.Module):
             hms_pred = CenterNetPoolingNMS(kernel=3)(hms_pred)
             return hms_pred, whs_pred, offsets_pred
 
+    def pred(self,x):
+        x = self.backbone(x)
+        x = self.decoder(x)
+        hms_pred, whs_pred, offsets_pred = self.head(x)
+        return hms_pred,whs_pred,offsets_pred
+
 
 class CenterNetDecoder(nn.Module):
     def __init__(self, in_channels, bn_momentum=0.1):

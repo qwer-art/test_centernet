@@ -61,6 +61,7 @@ def l1_loss(pred, target, mask):
 
     """
     expand_mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
+    print(f"expand_mask: {expand_mask.shape}")
 
     # Don't calculate loss in the position without ground truth.
     loss = F.l1_loss(pred * expand_mask, target * expand_mask, reduction='sum')

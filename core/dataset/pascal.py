@@ -4,6 +4,8 @@
 # @Time : 2022/3/28 17:32
 # @Software: PyCharm
 # @Brief: pascal VOC Dataset
+from numba import float32
+
 from core.dataset import CenterNetDataset
 
 import os
